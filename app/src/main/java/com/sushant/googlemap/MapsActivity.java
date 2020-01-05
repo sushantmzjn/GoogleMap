@@ -4,12 +4,17 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.os.Bundle;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.sushant.googlemap.model.LatitudeLongitude;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -39,9 +44,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        /** Add a marker in Sydney and move the camera
+         LatLng sydney = new LatLng(27.706195, 85.3300396);
+         mMap.addMarker(new MarkerOptions().position(sydney).title("hamro college"));
+         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+         */
+        List<LatitudeLongitude> latitudeLongitudes = new ArrayList<>();
+        latitudeLongitudes.add(new LatitudeLongitude(27.706195, 85.3300396, "softwarica"));
+        latitudeLongitudes.add(new LatitudeLongitude(27.7079284, 85.330543, "Galaxy school"));
+
+        CameraUpdate centre, zoom;
+
+        for (int i = 0; i < latitudeLongitudes.size(); i++){
+            centre = CameraUpdateFactory.newLatLng(new LatLng(latitudeLongitudes.get(i).getLat()
+            ,latitudeLongitudes.get(i).getLon()));
+            zoom = CameraUpdateFactory.zoomTo(16);
+            mMap.addMarker(new MarkerOptions().position(new LatLng(latitudeLongitudes.get(i).getLat()
+            ,latitudeLongitudes.get(i).getLon())).title(latitudeLongitudes.get(i).getMarker()));
+
+            mMap.moveCamera(centre);
+            mMap.animateCamera(zoom);
+            mMap.getUiSettings().setZoomControlsEnabled(true);
+        }
+
     }
 }
